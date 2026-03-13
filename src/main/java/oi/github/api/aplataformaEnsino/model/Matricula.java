@@ -2,12 +2,15 @@ package oi.github.api.aplataformaEnsino.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Data
+@EntityListeners(AuditingEntityListener.class)
 public class Matricula {
 
     @Id
@@ -15,6 +18,7 @@ public class Matricula {
     @Column(name = "id_matricula", nullable = false, unique = true)
     private UUID id;
 
+    @CreatedDate
     @Column(name = "data_matricula", nullable = false)
     private LocalDateTime dataMatricula;
 
@@ -31,4 +35,18 @@ public class Matricula {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_aluno" )
     private Aluno aluno;
+
+    public void notaDoAluno(Double notaFinal){
+        if (notaFinal >= 0 && notaFinal <= 10){
+            if (notaFinal >= 6){
+                System.out.println("Status Aluno: Passou de Ano, nota: " + notaFinal);
+            }
+            if(notaFinal == 5){
+                System.out.println("Status Aluno: Recuperação, nota: " + notaFinal);
+            }
+            else {
+                System.out.println("Status Aluno: Reprovado, nota: " + notaFinal);
+            }
+        }
+    }
 }

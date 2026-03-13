@@ -1,12 +1,11 @@
 package oi.github.api.aplataformaEnsino.service;
 
+import oi.github.api.aplataformaEnsino.exception.VerificacaoId;
 import oi.github.api.aplataformaEnsino.model.Aluno;
-import oi.github.api.aplataformaEnsino.model.Curso;
 import oi.github.api.aplataformaEnsino.repository.AlunoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,7 +20,7 @@ public class AlunoService {
     }
 
     public Aluno findById(UUID id) {
-        return repository.findById(id).orElse(null);
+        return repository.findById(id).orElseThrow(VerificacaoId::new);
     }
 
     public Aluno save(Aluno aluno) {
@@ -29,8 +28,12 @@ public class AlunoService {
     }
 
     public Aluno atualizarPorId(Aluno aluno, UUID id) {
-        var alunoIndentificado = repository.findById(id).orElse(null);
+        var alunoIndentificado = repository.findById(id).orElseThrow(VerificacaoId::new);
         assert alunoIndentificado != null;
+        alunoIndentificado.setNome(aluno.getNome());
+        alunoIndentificado.setTelefone(aluno.getTelefone());
+        alunoIndentificado.setEmail(aluno.getEmail());
+        alunoIndentificado.setDataCadastro(aluno.getDataCadastro());
         return repository.save(alunoIndentificado);
     }
 
@@ -39,9 +42,8 @@ public class AlunoService {
     }
 
     public Aluno listaDeCursosAtravesDoId(UUID id) {
-        var cursoIdentificado = repository.findById(id).orElse(null);
-        Aluno aluno = new Aluno();
-        aluno.curso.forEach(System.out::println);
-        return aluno;
+        Aluno cursoIdentificado = repository.findById(id).orElseThrow(VerificacaoId::new);
+        cursoIdentificado.curso.forEach(System.out::println);
+        return cursoIdentificado;
     }
 }

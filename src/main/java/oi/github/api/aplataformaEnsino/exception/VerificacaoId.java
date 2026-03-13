@@ -1,8 +1,8 @@
 package oi.github.api.aplataformaEnsino.exception;
 
-public class gggg extends RuntimeException{
+public class VerificacaoId extends RuntimeException{
 
-    public gggg(String message) {
-        super(message);
+    public VerificacaoId() {
+        super("Id não encontrado");
     }
 }

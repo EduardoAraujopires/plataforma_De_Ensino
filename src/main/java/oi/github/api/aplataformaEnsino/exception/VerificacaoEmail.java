@@ -1,8 +1,8 @@
 package oi.github.api.aplataformaEnsino.exception;
 
-public class VerificacaoId extends RuntimeException{
+public class VerificacaoEmail extends RuntimeException{
 
-    public VerificacaoId() {
-        super("Id não encontrado");
+    public VerificacaoEmail() {
+        super("Email não existe");
     }
 }

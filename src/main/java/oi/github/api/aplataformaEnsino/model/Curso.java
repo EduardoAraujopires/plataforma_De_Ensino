@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,6 +15,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "tb_curso")
 public class Curso {
 
@@ -33,12 +36,14 @@ public class Curso {
     @Column(name = "nivel_do_curso")
     private NivelCurso nivel;
 
+    @CreatedDate // criação da data no momento da criação
     @Column(name = "data_criacao")
     private LocalDateTime dataCriacao;
 
     @Column(name = "status_curso")
-    private boolean ativo;
+    private Boolean ativo;
 
     @OneToMany(mappedBy = "tb_curso")
     public List<Aluno> alunos;
 }
+
