@@ -9,17 +9,17 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "tb_aluno")
+@Table(name = "aluno")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class Aluno {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_aluno", nullable = false, unique = true)
@@ -41,7 +41,7 @@ public class Aluno {
     @Column(name = "data_cadastro")
     private LocalDateTime dataCadastro;
 
-    @OneToMany(mappedBy = "tb_aluno")
-    public List<Curso> curso;
+    @OneToMany(mappedBy = "aluno", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    public List<Matricula> matricula = new ArrayList<>();
 
 }

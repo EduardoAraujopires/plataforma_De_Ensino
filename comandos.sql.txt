@@ -1,0 +1,20 @@
+create table aluno(
+   id uuid not null primary key,
+   name varchar(100) not null,
+   email varchar(50) not null,
+   telefone varchar(30) not null,
+   data_nascimento date not null,
+   data_cadastro timestamp,
+   id_curso uuid
+);
+create table curso(
+	id uuid not null primary key,
+	nome varchar(100) not null,
+	descricao varchar(50),
+	carga_horaria integer not null,
+	data_criacao timestamp,
+	status_curso boolean,
+	nivel varchar(40) not null,
+	CONSTRAINT chk_nivel CHECK(nivel in('INICIANTE', 'INTERMEDIARIO', 'AVANCADO')),
+	id_aluno uuid not null REFERENCES aluno (id)
+);

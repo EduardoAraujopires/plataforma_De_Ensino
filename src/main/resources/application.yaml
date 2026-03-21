@@ -1,3 +1,14 @@
 spring:
   application:
     name: aplataformaEnsino
+  datasource:
+    url: jdbc:postgresql://localhost:5432/plataformaEnsino
+    password: postgres
+    username: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+    ddl-auto: create
+    properties:
+      hibernate.format_sql: true

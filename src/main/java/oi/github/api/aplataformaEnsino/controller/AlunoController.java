@@ -1,7 +1,9 @@
 package oi.github.api.aplataformaEnsino.controller;
 
 import oi.github.api.aplataformaEnsino.model.Aluno;
+import oi.github.api.aplataformaEnsino.model.Curso;
 import oi.github.api.aplataformaEnsino.service.AlunoService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,7 +45,19 @@ public class AlunoController {
      }
 
      @GetMapping("/{id}/cursos")
-     public Aluno findByCurso(@PathVariable UUID id){
-        return alunoService.listaDeCursosAtravesDoId(id);
+     public void findByMatriculas(@PathVariable UUID id){
+         alunoService.exibirDetalhesMatriculas(id);
      }
+
+    @GetMapping("/{id}/cursos")
+    public ResponseEntity<List<Curso>> listarCursosDoAluno(@PathVariable UUID id) {
+        List<Curso> cursos = alunoService.listarCursosDoAluno(id);
+        return ResponseEntity.ok(cursos);
+    }
+
+    @GetMapping("/{id}/matriculas")
+    public ResponseEntity<Void> exibirDetalhesMatriculas(@PathVariable UUID id) {
+        alunoService.exibirDetalhesMatriculas(id);
+        return ResponseEntity.ok().build();
+    }
 }

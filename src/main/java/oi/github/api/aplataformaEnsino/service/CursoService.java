@@ -22,6 +22,7 @@ public class CursoService {
     @Autowired
     CursoRepository cursoRepository;
     AlunoRepository alunoRepository;
+
     public List<Curso> findAll() {
         return cursoRepository.findAll();
     }
@@ -41,23 +42,23 @@ public class CursoService {
         cursoAtualizado.setDescricao(curso.getDescricao());
         cursoAtualizado.setCargaHoraria(curso.getCargaHoraria());
         cursoAtualizado.setDataCriacao(curso.getDataCriacao());
-        cursoAtualizado.setAlunos(curso.getAlunos());
+        cursoAtualizado.setAluno(curso.getAluno());
         cursoAtualizado.setNivel(curso.getNivel());
         return cursoRepository.save(cursoAtualizado);
     }
 
-    public void deletarById(UUID id){
+    public void deletarById(UUID id) {
         cursoRepository.deleteById(id);
     }
 
-    public Curso findByAluno(UUID id){
+    public Curso findByMatricula(UUID id) {
         Aluno idAluno = alunoRepository.findById(id).orElseThrow(VerificacaoId::new);
         Curso curso = cursoRepository.findById(idAluno.getId()).orElseThrow(VerificacaoId::new);
-        curso.alunos.forEach(System.out::println);
+        curso.Matricula.forEach(System.out::println);
         return curso;
     }
 
-    public List<Curso> findByNivel(NivelCurso curso){
-       return cursoRepository.findByNivel(curso);
+    public List<Curso> findByNivelCurso(NivelCurso curso) {
+        return cursoRepository.findByNivel(curso);
     }
 }

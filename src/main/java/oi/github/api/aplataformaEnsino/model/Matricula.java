@@ -5,7 +5,9 @@ import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -25,28 +27,16 @@ public class Matricula {
     @Column(name = "nota_final")
     private Double notaFinal;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "Status_Da_Matricula")
     private StatusDaMatricula statusDaMatricula;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_curso")
+    @JoinColumn(name = "id_curso", nullable = false)
     private Curso curso;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_aluno" )
+    @JoinColumn(name = "id_aluno", nullable = false)
     private Aluno aluno;
 
-    public void notaDoAluno(Double notaFinal){
-        if (notaFinal >= 0 && notaFinal <= 10){
-            if (notaFinal >= 6){
-                System.out.println("Status Aluno: Passou de Ano, nota: " + notaFinal);
-            }
-            if(notaFinal == 5){
-                System.out.println("Status Aluno: Recuperação, nota: " + notaFinal);
-            }
-            else {
-                System.out.println("Status Aluno: Reprovado, nota: " + notaFinal);
-            }
-        }
-    }
 }

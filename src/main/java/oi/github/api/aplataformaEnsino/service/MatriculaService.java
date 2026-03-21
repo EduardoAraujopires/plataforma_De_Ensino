@@ -28,11 +28,11 @@ public class MatriculaService {
     @Autowired
     private CursoRepository cursoRepository;
 
-   @Autowired
-   private MatriculaRepository matriculaRepository;
+    @Autowired
+    private MatriculaRepository matriculaRepository;
 
     public boolean procurandoSeAlunoJaExiste(List<Matricula> alunosEncontrados, UUID idAluno) {
-        boolean verificandoSeExiste = alunosEncontrados.stream().anyMatch(m -> m.getAluno().getId().equals(idAluno));
+        var verificandoSeExiste = alunosEncontrados.stream().anyMatch(m -> m.getAluno().getId().equals(idAluno));
         if ((!verificandoSeExiste)) {
             throw new VerificacaoAluno();
         }
@@ -40,45 +40,66 @@ public class MatriculaService {
     }
 
     public Matricula realizarMatricula(Aluno aluno, Curso curso) {
-            Matricula matricula = new Matricula();
-            long idadeAluno = ChronoUnit.YEARS.between(aluno.getDataNascimento(), LocalDate.now());
-            List<Matricula> verificaoSeJaExisteAluno = new ArrayList<>();
-            Aluno idAluno = repository.findById(aluno.getId()).orElseThrow(VerificacaoId::new);
-            Curso idCurso = cursoRepository.findById(curso.getId()).orElseThrow(VerificacaoId::new);
-            assert idAluno != null;
-            if (procurandoSeAlunoJaExiste(verificaoSeJaExisteAluno, idAluno.getId())) {
-                 matricula.setCurso(idCurso);
-            }
-                if (idadeAluno < 16) {
-                    throw new VerificacaoAluno();
-                }
-                if (matriculaRepository.existsByEmail(aluno.getEmail())) {
-                    throw new VerificacaoEmail();
-                } if (curso.getAtivo().equals(true)) {
-                    matricula.setAluno(idAluno);
-                    matricula.setCurso(idCurso);
-                    matriculaRepository.save(matricula);
-                }
-            return null;
+        Matricula matricula = new Matricula();
+        long idadeAluno = ChronoUnit.YEARS.between(aluno.getDataNascimento(), LocalDate.now());
+        List<Matricula> verificaoSeJaExisteAluno = new ArrayList<>();
+        Aluno idAluno = repository.findById(aluno.getId()).orElseThrow(VerificacaoId::new);
+        Curso idCurso = cursoRepository.findById(curso.getId()).orElseThrow(VerificacaoId::new);
+        assert idAluno != null;
+        if (procurandoSeAlunoJaExiste(verificaoSeJaExisteAluno, idAluno.getId())) {
+            matricula.setCurso(idCurso);
+        }
+        if (idadeAluno < 16) {
+            throw new VerificacaoAluno();
+        }
+        if (repository.existsByEmail(aluno.getEmail())) {
+            throw new VerificacaoEmail();
+        }
+        if (curso.getAtivo().equals(true)) {
+            matricula.setAluno(idAluno);
+            matricula.setCurso(idCurso);
+            matriculaRepository.save(matricula);
+        }
+        return null;
     }
 
     public List<Matricula> findByStatus(List<Matricula> list) {
-                List<StatusDaMatricula> listaStatus = List.of(StatusDaMatricula.ATIVO, StatusDaMatricula.CANCELADO, StatusDaMatricula.CONCLUIDO);
+        List<StatusDaMatricula> listaStatus = List.of(StatusDaMatricula.ATIVO, StatusDaMatricula.CANCELADO, StatusDaMatricula.CONCLUIDO);
 
-                return list.stream().filter(m -> listaStatus.contains(m.getStatusDaMatricula())).toList();
-                // listando por status utilizando o filter
+        return list.stream().filter(m -> listaStatus.contains(m.getStatusDaMatricula())).toList();
+        // listando por status utilizando o filter
     }
 
-    public void deletarMatricula(UUID id) {
-                matriculaRepository.deleteById(id);
+    public void cancelarMatricula(UUID id) {
+        Matricula matricula = new Matricula();
+        Matricula dadosMatricula = matriculaRepository.findById(id).orElseThrow(VerificacaoId::new);
+        if (dadosMatricula.equals(matricula)) {
+            matricula.setStatusDaMatricula(StatusDaMatricula.CANCELADO);
+        }
     }
 
     public Matricula concluir(Double notaDoAluno, Matricula matricula) {
         Matricula matricula1 = matriculaRepository.findById(matricula.getId()).orElseThrow(VerificacaoId::new);
-           if (matricula1 != null) {
-                    matricula1.notaDoAluno(notaDoAluno);
-                    return matriculaRepository.save(matricula1);
-           }
+        if (matricula1 != null) {
+            notaDoAluno(notaDoAluno);
+            return matriculaRepository.save(matricula1);
+        }
         return null;
+    }
+
+    public List<Matricula> findAll() {
+        return matriculaRepository.findAll();
+    }
+    public void notaDoAluno(Double notaFinal) {
+        if (notaFinal >= 0 && notaFinal <= 10) {
+            if (notaFinal >= 6) {
+                System.out.println("Status Aluno: Passou de Ano, nota: " + notaFinal);
+            }
+            if (notaFinal == 5) {
+                System.out.println("Status Aluno: Recuperação, nota: " + notaFinal);
+            } else {
+                System.out.println("Status Aluno: Reprovado, nota: " + notaFinal);
+            }
+        }
     }
 }

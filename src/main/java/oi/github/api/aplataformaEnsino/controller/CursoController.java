@@ -34,8 +34,8 @@ public class CursoController {
     }
 
     @GetMapping("/{id}")
-    public Curso findByAlunoPorId(@PathVariable UUID id){
-        return cursoService.findByAluno(id);
+    public Curso findByMatricula(@PathVariable UUID id){
+        return cursoService.findByMatricula(id);
     }
 
     @PutMapping("/{id}")
@@ -50,6 +50,6 @@ public class CursoController {
 
     @GetMapping
     public List<Curso> findByNivel(@RequestBody NivelCurso curso){
-        return cursoService.findByNivel(curso);
+        return cursoService.findByNivelCurso(curso);
     }
 }
